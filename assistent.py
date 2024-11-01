@@ -19,9 +19,9 @@ def get_response(messages: list):
                 temperature=1.0
             )
             return response['choices'][0]['message']['content']
-        except openai.error.RateLimitError:
-            print("Rate limit exceeded. Retrying in 10 seconds...")
-            time.sleep(10)  # Wait 10 seconds before retrying
+        # except openai.error.RateLimitError:
+        #     print("Rate limit exceeded. Retrying in 10 seconds...")
+        #     time.sleep(10)  # Wait 10 seconds before retrying
         except Exception as e:
             print(f"An error occurred: {e}")
             break  # Exit the loop if any other error occurs
@@ -31,7 +31,8 @@ if __name__ == "__main__":
         {"role": "system", "content": "You are a virtual assistant and your name is JARVIS."}
     ]
     
-    while True:
+    user_input = ""
+    while user_input.lower() != "exit":
         user_input = input("\nYou: ")
         messages.append({"role": "user", "content": user_input})
         
