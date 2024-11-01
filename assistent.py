@@ -30,13 +30,15 @@ if __name__ == "__main__":
     messages = [
         {"role": "system", "content": "You are a virtual assistant and your name is JARVIS."}
     ]
-    
-    user_input = ""
-    while user_input.lower() != "exit":
-        user_input = input("\nYou: ")
-        messages.append({"role": "user", "content": user_input})
-        
-        new_message = get_response(messages=messages)
-        if new_message:
-            print("JARVIS:", new_message)
-            messages.append({"role": "assistant", "content": new_message})
+    try:
+        user_input = ""
+        while user_input.lower() != "exit":
+            user_input = input("\nYou: ")
+            messages.append({"role": "user", "content": user_input})
+            
+            new_message = get_response(messages=messages)
+            if new_message:
+                print("\nJARVIS:", new_message)
+                messages.append({"role": "assistant", "content": new_message})
+    except KeyboardInterrupt:
+        print("See yaaa!!")
