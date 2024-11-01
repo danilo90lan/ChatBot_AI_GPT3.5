@@ -1,7 +1,7 @@
 import json
 import openai
 
-with open("secret.json") as f:
+with open("secrets.json") as f:
     secrets = json.load(f)
     api_key = secrets["api_key"]
 
@@ -21,3 +21,5 @@ if __name__ == "__main__":
     ]
     user_input = input("\nYou ")
     messages.append({"role": "user", "content": user_input})
+    new_message = get_response(messages=messages)
+    print(new_message)
