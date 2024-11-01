@@ -1,5 +1,6 @@
 import json
 import openai
+import time
 
 # Load API key from secrets.json
 with open("secrets.json") as f:
@@ -10,15 +11,22 @@ with open("secrets.json") as f:
 openai.api_key = api_key
 
 def get_response(messages: list):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=messages,
-        temperature=1.0
-    )
-    return response['choices'][0]['message']['content']
+    while True:
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                temperature=1.0
+            )
+            return response['choices'][0]['message']['content']
+        except openai.error.RateLimitError:
+            print("Rate limit exceeded. Retrying in 10 seconds...")
+            time.sleep(10)  # Wait 10 seconds before retrying
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            break  # Exit the loop if any other error occurs
 
 if __name__ == "__main__":
-    # Initialize the messages with a system message
     messages = [
         {"role": "system", "content": "You are a virtual assistant and your name is JARVIS."}
     ]
@@ -28,7 +36,6 @@ if __name__ == "__main__":
         messages.append({"role": "user", "content": user_input})
         
         new_message = get_response(messages=messages)
-        print("JARVIS:", new_message)
-        
-        # Optionally, add the assistant's response to the messages to maintain context
-        messages.append({"role": "assistant", "content": new_message})
+        if new_message:
+            print("JARVIS:", new_message)
+            messages.append({"role": "assistant", "content": new_message})
